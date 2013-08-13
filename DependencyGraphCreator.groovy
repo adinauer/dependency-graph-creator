@@ -27,9 +27,9 @@ class MavenDependencyRetriever {
 	}
 }
 
-class MavenDependencyGraphCreator {
+class DependencyToDotLanguageTranslator {
 
-	List<String> createGraphForMatchingDependenciesInPoms(Map<String, Set<String>> dependenciesGroupedByModule) {
+	List<String> translateDependenciesToDotLanguage(Map<String, Set<String>> dependenciesGroupedByModule) {
 		List<String> graphEntries = []
 		dependenciesGroupedByModule.each { module, dependencies ->
 			graphEntries << "\"$module\";"
@@ -64,9 +64,9 @@ new File('/home/alex/repos/fhbay').eachFile(FileType.DIRECTORIES) { module ->
 }
 
 def dependenciesGroupedByModule = new MavenDependencyRetriever().parseMatchingDependenciesFromPoms(pomFiles, dependencyRegex)
-def graphEntries = new MavenDependencyGraphCreator().createGraphForMatchingDependenciesInPoms(dependenciesGroupedByModule)
+def graphEntries = new DependencyToDotLanguageTranslator().translateDependenciesToDotLanguage(dependenciesGroupedByModule)
 
 graphEntries.each {	println it }
 
 File graphDotFile = new File("tmp.gv")
-new GraphvizDotfileCreator().createGraphvizDotfile(graphDotFile, graphEntries)
+new GraphvizDotfileCreator().createDirectedGraphFile(graphDotFile, graphEntries)
