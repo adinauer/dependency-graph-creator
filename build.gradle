@@ -16,11 +16,13 @@ class CreateDependencyGraph extends DefaultTask {
 	@Input
 	Map<String, Set<String>> dependenciesGroupedByModule
 
+	@OutputFile
+	File graphDotFile = new File("tmp.gv")
+
 	@TaskAction
 	void createDotfile() {
 		def graphEntries = new DependencyToDotLanguageTranslator().translateDependenciesToDotLanguage(dependenciesGroupedByModule)
 
-		File graphDotFile = new File("tmp.gv")
 		new GraphvizDotfileCreator().createDirectedGraphFile(graphDotFile, graphEntries)
 	}
 }
