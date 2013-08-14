@@ -1,0 +1,21 @@
+import groovy.io.FileType
+
+// now run
+// groovy dependencies.groovy '.*acquisition.*' && dot tmp.gv -Tsvg > tmp.svg
+
+task createDependencyGraph << {
+	def dependencyRegex = /.*/
+
+	List<File> pomFiles = []
+	new File('/home/adinauer/repos/easytax/trunk').eachFile(FileType.DIRECTORIES) { module ->
+	    pomFiles << new File(module.absolutePath + '/pom.xml')
+	}
+
+	def dependenciesGroupedByModule = new MavenDependencyRetriever().parseMatchingDependenciesFromPoms(pomFiles, dependencyRegex)
+	def graphEntries = new DependencyToDotLanguageTranslator().translateDependenciesToDotLanguage(dependenciesGroupedByModule)
+
+	graphEntries.each {	println it }
+
+	File graphDotFile = new File("tmp.gv")
+	new GraphvizDotfileCreator().createDirectedGraphFile(graphDotFile, graphEntries)
+}
