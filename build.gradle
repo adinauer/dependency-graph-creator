@@ -4,12 +4,7 @@ import groovy.io.FileType
 // groovy dependencies.groovy '.*acquisition.*' && dot tmp.gv -Tsvg > tmp.svg
 
 task createDependencyGraph(type: CreateDependencyGraph) {
-	List<File> pomFiles = []
-	new File(rootDirOfProjectToSearch).eachFile(FileType.DIRECTORIES) { module ->
-	    pomFiles << new File(module.absolutePath + '/pom.xml')
-	}
-
-	dependencyGatherer = new MavenDependencyGatherer(pomFiles: pomFiles, dependencyRegex: dependencyRegex)
+	dependencyGatherer = new MavenDependencyGatherer(rootPomFile: new File(rootDirOfProjectToSearch + '/pom.xml'), dependencyRegex: dependencyRegex)
 	translator = new DependencyToDotLanguageTranslator()
 	fileCreator = new GraphvizDotfileCreator()
 }
@@ -37,10 +32,10 @@ interface DependencyGatherer {
 }
 
 class MavenDependencyGatherer implements DependencyGatherer {
-	List<File> pomFiles
+	File rootPomFile
 	String dependencyRegex
 
 	Map<String, Set<String>> lookupDependencies() {
-		new MavenPomParser().parseMatchingDependencies(pomFiles, dependencyRegex)
+		new MavenMultiModulePomParser().parseMatchingDependencies(rootPomFile, dependencyRegex)
 	}
 }
