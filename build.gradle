@@ -12,7 +12,6 @@ class CreateDependencyGraph extends DefaultTask {
 	DependencyToDotLanguageTranslator translator
 	GraphvizDotfileCreator fileCreator
 
-	@OutputFile
 	File graphDotFile = new File("tmp.gv")
 
 	@TaskAction
