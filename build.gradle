@@ -1,5 +1,3 @@
-import groovy.io.FileType
-
 // now run
 // groovy dependencies.groovy '.*acquisition.*' && dot tmp.gv -Tsvg > tmp.svg
 
@@ -19,7 +17,7 @@ class CreateDependencyGraph extends DefaultTask {
 
 	@TaskAction
 	void createDotfile() {
-		def dependenciesGroupedByModule = dependencyGatherer.lookupDependencies()
+		def dependenciesGroupedByModule = dependencyGatherer.gatherDependencies()
 
 		def graphEntries = translator.translateDependenciesToDotLanguage(dependenciesGroupedByModule)
 
@@ -28,14 +26,14 @@ class CreateDependencyGraph extends DefaultTask {
 }
 
 interface DependencyGatherer {
-	Map<String, Set<String>> lookupDependencies()
+	Map<String, Set<String>> gatherDependencies()
 }
 
 class MavenDependencyGatherer implements DependencyGatherer {
 	File rootPomFile
 	String dependencyRegex
 
-	Map<String, Set<String>> lookupDependencies() {
+	Map<String, Set<String>> gatherDependencies() {
 		new MavenMultiModulePomParser().parseMatchingDependencies(rootPomFile, dependencyRegex)
 	}
 }
