@@ -1,5 +1,5 @@
-class MavenDependencyRetriever {
-	Map<String, Set<String>> parseMatchingDependenciesFromPoms(List<File> pomFiles, String regex) {
+class MavenPomParser {
+	Map<String, Set<String>> parseMatchingDependencies(List<File> pomFiles, String regex) {
 		Map<String, Set<String>> dependenciesGroupedByModule = [:]
 
 

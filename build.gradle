@@ -41,6 +41,6 @@ class MavenDependencyGatherer implements DependencyGatherer {
 	String dependencyRegex
 
 	Map<String, Set<String>> lookupDependencies() {
-		new MavenDependencyRetriever().parseMatchingDependenciesFromPoms(pomFiles, dependencyRegex)
+		new MavenPomParser().parseMatchingDependencies(pomFiles, dependencyRegex)
 	}
 }
