@@ -9,20 +9,34 @@ task createDependencyGraph(type: CreateDependencyGraph) {
 	    pomFiles << new File(module.absolutePath + '/pom.xml')
 	}
 
-	dependenciesGroupedByModule = new MavenDependencyRetriever().parseMatchingDependenciesFromPoms(pomFiles, dependencyRegex)
+	dependencyGatherer = new MavenDependencyGatherer(pomFiles: pomFiles, dependencyRegex: dependencyRegex)
 }
 
 class CreateDependencyGraph extends DefaultTask {
-	@Input
-	Map<String, Set<String>> dependenciesGroupedByModule
+	DependencyGatherer dependencyGatherer
 
 	@OutputFile
 	File graphDotFile = new File("tmp.gv")
 
 	@TaskAction
 	void createDotfile() {
+		def dependenciesGroupedByModule = dependencyGatherer.lookupDependencies()
+
 		def graphEntries = new DependencyToDotLanguageTranslator().translateDependenciesToDotLanguage(dependenciesGroupedByModule)
 
 		new GraphvizDotfileCreator().createDirectedGraphFile(graphDotFile, graphEntries)
+	}
+}
+
+interface DependencyGatherer {
+	Map<String, Set<String>> lookupDependencies()
+}
+
+class MavenDependencyGatherer implements DependencyGatherer {
+	List<File> pomFiles
+	String dependencyRegex
+
+	Map<String, Set<String>> lookupDependencies() {
+		new MavenDependencyRetriever().parseMatchingDependenciesFromPoms(pomFiles, dependencyRegex)
 	}
 }
