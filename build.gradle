@@ -1,3 +1,5 @@
+import java.awt.Desktop
+
 // now run
 // groovy dependencies.groovy '.*acquisition.*' && dot tmp.gv -Tsvg > tmp.svg
 
@@ -5,6 +7,26 @@ task createDependencyGraph(type: CreateDependencyGraph) {
 	dependencyGatherer = new MavenDependencyGatherer(rootPomFile: new File(rootDirOfProjectToSearch + '/pom.xml'), dependencyRegex: dependencyRegex, projectRegex: projectRegex)
 	translator = new DependencyToDotLanguageTranslator()
 	fileCreator = new GraphvizDotfileCreator()
+}
+
+task copyDependencyReportLibraries(type: Copy) {
+	from "src/main/lib"
+	into "$buildDir/report/dependencies"
+}
+
+task copyDependencyReportTemplate(type: Copy, dependsOn: [createDependencyGraph, copyDependencyReportLibraries]) {
+	from "src/main/resources"
+	into "$buildDir/report/dependencies"
+
+	expand(dependencies: file("tmp.gv").text)
+
+	outputs.upToDateWhen { false }
+}
+
+task createDependencyReport(dependsOn: copyDependencyReportTemplate)
+
+task openDependencyReport << {
+	Desktop.getDesktop().open(new File("$buildDir/report/dependencies/dependencies.html"))
 }
 
 class CreateDependencyGraph extends DefaultTask {
