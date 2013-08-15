@@ -3,31 +3,39 @@ import java.awt.Desktop
 // now run
 // groovy dependencies.groovy '.*acquisition.*' && dot tmp.gv -Tsvg > tmp.svg
 
+def dependencyReportDir = "$buildDir/report/dependencies"
+
 task createDependencyGraph(type: CreateDependencyGraph) {
 	dependencyGatherer = new MavenDependencyGatherer(rootPomFile: new File(rootDirOfProjectToSearch + '/pom.xml'), dependencyRegex: dependencyRegex, projectRegex: projectRegex)
 	translator = new DependencyToDotLanguageTranslator()
 	fileCreator = new GraphvizDotfileCreator()
 	regex = dependencyRegex
+
+	graphDotFile = file("$dependencyReportDir/dependencies.gv")
+
+	outputs.upToDateWhen { false }
 }
 
 task copyDependencyReportLibraries(type: Copy) {
 	from "src/main/lib"
-	into "$buildDir/report/dependencies"
+	into dependencyReportDir
 }
 
-task copyDependencyReportTemplate(type: Copy, dependsOn: [createDependencyGraph, copyDependencyReportLibraries]) {
-	from "src/main/resources"
-	into "$buildDir/report/dependencies"
+task copyDependencyReportTemplate(dependsOn: [createDependencyGraph, copyDependencyReportLibraries]) << {
+	copy {
+		from "src/main/resources"
+		into dependencyReportDir
 
-	expand(dependencies: file("tmp.gv").text)
+		String graphAsDot = createDependencyGraph.outputs.files.singleFile.text
 
-	outputs.upToDateWhen { false }
+		expand(dependencies: graphAsDot)
+	}
 }
 
 task createDependencyReport(dependsOn: copyDependencyReportTemplate)
 
 task openDependencyReport(mustRunAfter: createDependencyReport) << {
-	Desktop.getDesktop().open(new File("$buildDir/report/dependencies/dependencies.html"))
+	Desktop.getDesktop().open(new File("$dependencyReportDir/dependencies.html"))
 }
 
 class CreateDependencyGraph extends DefaultTask {
@@ -36,7 +44,8 @@ class CreateDependencyGraph extends DefaultTask {
 	GraphvizDotfileCreator fileCreator
 	String regex
 
-	File graphDotFile = new File("tmp.gv")
+	@OutputFile
+	File graphDotFile
 
 	@TaskAction
 	void createDotfile() {
