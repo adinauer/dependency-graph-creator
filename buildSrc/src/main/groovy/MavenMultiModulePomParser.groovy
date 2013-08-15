@@ -1,8 +1,8 @@
 import groovy.io.FileType
 
 class MavenMultiModulePomParser {
-	Map<String, Set<String>> parseMatchingDependencies(File rootPomFile, String regex) {
-		return new MavenPomParser().parseMatchingDependencies(collectModulePomFiles(rootPomFile), regex)
+	Map<String, Set<String>> parseMatchingDependencies(File rootPomFile, String dependencyRegex, String projectRegex) {
+		return new MavenPomParser().parseMatchingDependencies(collectModulePomFiles(rootPomFile), dependencyRegex, projectRegex)
 	}
 
 	private List<File> collectModulePomFiles(File rootPomFile) {

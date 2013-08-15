@@ -1,5 +1,5 @@
 class MavenPomParser {
-	Map<String, Set<String>> parseMatchingDependencies(List<File> pomFiles, String regex) {
+	Map<String, Set<String>> parseMatchingDependencies(List<File> pomFiles, String dependencyRegex, String projectRegex) {
 		Map<String, Set<String>> dependenciesGroupedByModule = [:]
 
 
@@ -12,7 +12,7 @@ class MavenPomParser {
 
 				dependenciesGroupedByModule[module] = [] as Set
 
-				dependencies.findAll{ it.artifactId ==~ regex }.each { dependency ->
+				dependencies.findAll{ it.artifactId ==~ projectRegex && (it.artifactId ==~ dependencyRegex || module ==~ dependencyRegex) }.each { dependency ->
 					dependenciesGroupedByModule[module] << dependency.artifactId.toString()
 				}
 			}
