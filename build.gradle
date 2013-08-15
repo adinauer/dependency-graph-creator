@@ -7,6 +7,7 @@ task createDependencyGraph(type: CreateDependencyGraph) {
 	dependencyGatherer = new MavenDependencyGatherer(rootPomFile: new File(rootDirOfProjectToSearch + '/pom.xml'), dependencyRegex: dependencyRegex, projectRegex: projectRegex)
 	translator = new DependencyToDotLanguageTranslator()
 	fileCreator = new GraphvizDotfileCreator()
+	regex = dependencyRegex
 }
 
 task copyDependencyReportLibraries(type: Copy) {
@@ -25,7 +26,7 @@ task copyDependencyReportTemplate(type: Copy, dependsOn: [createDependencyGraph,
 
 task createDependencyReport(dependsOn: copyDependencyReportTemplate)
 
-task openDependencyReport << {
+task openDependencyReport(mustRunAfter: createDependencyReport) << {
 	Desktop.getDesktop().open(new File("$buildDir/report/dependencies/dependencies.html"))
 }
 
@@ -33,6 +34,7 @@ class CreateDependencyGraph extends DefaultTask {
 	DependencyGatherer dependencyGatherer
 	DependencyToDotLanguageTranslator translator
 	GraphvizDotfileCreator fileCreator
+	String regex
 
 	File graphDotFile = new File("tmp.gv")
 
@@ -40,7 +42,7 @@ class CreateDependencyGraph extends DefaultTask {
 	void createDotfile() {
 		def dependenciesGroupedByModule = dependencyGatherer.gatherDependencies()
 
-		def graphEntries = translator.translateDependenciesToDotLanguage(dependenciesGroupedByModule)
+		def graphEntries = translator.translateDependenciesToDotLanguage(dependenciesGroupedByModule, regex)
 
 		fileCreator.createDirectedGraphFile(graphDotFile, graphEntries)
 	}
