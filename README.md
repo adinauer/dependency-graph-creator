@@ -19,3 +19,14 @@ The report is located in:
 
     build/report/dependencies/dependencies.html
 
+Using graphviz
+--------------
+
+Alternatively you can also use the dot tool which comes with graphviz to transform the resulting file into JPG, SVG, ...
+You can find the .gv file at:
+
+    build/report/dependencies/dependencies.gv
+
+To transform the file you can use a command like the following:
+
+    dot dependencies.gv -Tsvg > tmp.svg
