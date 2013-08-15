@@ -30,3 +30,11 @@ You can find the .gv file at:
 To transform the file you can use a command like the following:
 
     dot dependencies.gv -Tsvg > tmp.svg
+
+Examples
+--------
+
+![Alt text](/examples/all_project_dependencies.png)
+
+
+![Alt text](/examples/matched_dependency.png)
