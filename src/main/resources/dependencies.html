@@ -1,0 +1,14 @@
+<html>
+<head>
+	<title>Dependency Graph</title>
+	<script src="viz.js"></script>
+</head>
+<body>
+	<script type="text/vnd.graphviz" id="dependencies">
+		${dependencies}
+	</script>
+	<script>
+		document.body.innerHTML += Viz(document.getElementById("dependencies").innerHTML, "svg");
+	</script>
+</body>
+</html>
