@@ -3,6 +3,7 @@ Dependency Graph Creator
 
 A gradle project that allows you to visually analyse the dependencies of a multi-module Maven project.
 
+
 Running
 -------
 
@@ -19,6 +20,7 @@ The report is located in:
 
     build/report/dependencies/dependencies.html
 
+
 Using graphviz
 --------------
 
@@ -31,10 +33,14 @@ To transform the file you can use a command like the following:
 
     dot dependencies.gv -Tsvg > tmp.svg
 
+
 Examples
 --------
+
+Matched modules will be colored in blue.
+
+![Alt text](/examples/matched_dependency.png)
 
 ![Alt text](/examples/all_project_dependencies.png)
 
 
-![Alt text](/examples/matched_dependency.png)
