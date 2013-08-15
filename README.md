@@ -8,12 +8,14 @@ Running
 
 You can generate a graph in graphviz dot language and an html report to render the graph by using the following command:
 
-  gradle createDependencyReport -ProotDirOfProjectToSearch=/home/adinauer/repos/topsecret -PdependencyRegex='topsecret-web' -PprojectRegex='.*topsecret.*'
+    gradle createDependencyReport -ProotDirOfProjectToSearch=/home/adinauer/repos/topsecret -PdependencyRegex='topsecret-web' -PprojectRegex='.*topsecret.*'
+
 
 After creating the report you can either open it manually or have gradle open it for you using your default application for opening .html files.
 
-  gradle openDependencyReport
+    gradle openDependencyReport
 
 The report is located in:
 
-  build/report/dependencies/dependencies.html
+    build/report/dependencies/dependencies.html
+
