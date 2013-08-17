@@ -25,17 +25,17 @@
 		}
 
 		function highlightArrowsForMatchingNodes(graphAsDot, module) {
-			var regex = new RegExp(module, "");
+			var moduleNode = new RegExp('"' + module + '"', "");
 			var lines = graphAsDot.split("\\n");
 			var processedGraphAsDot = "";
 
 			for (var i = 0; i < lines.length; i++) {
 				var currentLine = lines[i];
 
-				if (currentLine.match(regex) && currentLine.match(/.*->.*/)) {
-					processedGraphAsDot += currentLine;
-				} else {
+				if (currentLine.match(/.*->.*/) && !currentLine.match(moduleNode)) {
 					processedGraphAsDot += currentLine.replace(';', '[color=gray80];');
+				} else {
+					processedGraphAsDot += currentLine;
 				}
 			}
 
