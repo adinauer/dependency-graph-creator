@@ -14,14 +14,19 @@
 
 	<script>
 		function redrawGraph(module) {
-			alert('module: ' + module);
-
-			var regex = new RegExp(module, "");
-
 			var graphAsDot = document.getElementById('dependencies').innerHTML;
 
-			var lines = graphAsDot.split('\\n');
+			var processedGraphAsDot = highlightArrowsForMatchingNodes(graphAsDot, module);
 
+			document.getElementById('dependencies_processed').innerHTML = processedGraphAsDot;
+
+			var graphAsSvg = Viz(document.getElementById("dependencies_processed").innerHTML, "svg");
+			document.getElementById('graph_container').innerHTML = graphAsSvg;
+		}
+
+		function highlightArrowsForMatchingNodes(graphAsDot, module) {
+			var regex = new RegExp(module, "");
+			var lines = graphAsDot.split("\\n");
 			var processedGraphAsDot = "";
 
 			for (var i = 0; i < lines.length; i++) {
@@ -34,10 +39,7 @@
 				}
 			}
 
-			document.getElementById('dependencies_processed').innerHTML = processedGraphAsDot;
-
-			var graphAsSvg = Viz(document.getElementById("dependencies_processed").innerHTML, "svg");
-			document.getElementById('graph_container').innerHTML = graphAsSvg;
+			return processedGraphAsDot;
 		}
 	</script>
 
