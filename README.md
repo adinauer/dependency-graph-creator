@@ -44,3 +44,7 @@ Matched modules will be colored in blue.
 ![Alt text](/examples/all_project_dependencies.png)
 
 
+If you click on one of the nodes only interesting edges (dependencies and dependents of the node) will be highlighted.
+![Alt text](/examples/only_interesting_edges_highlighted.png)
+
+
