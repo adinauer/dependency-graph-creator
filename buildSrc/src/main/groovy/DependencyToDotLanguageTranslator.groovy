@@ -10,7 +10,7 @@ class DependencyToDotLanguageTranslator {
 		}
 
 		dependenciesGroupedByModule.findAll{ it.key ==~ regex }.each{ module, dependencies ->
-			graphEntries << "\"$module\" [fontcolor=blue, color=blue];"
+			graphEntries << "\"$module\" [fontcolor=blue, color=blue, , label=<<TABLE border=\"0\"><TR><TD href=\"javascript:redrawGraph('$module');\">$module</TD></TR></TABLE>>];"
 		}
 
 		return graphEntries

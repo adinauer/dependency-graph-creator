@@ -4,11 +4,45 @@
 	<script src="viz.js"></script>
 </head>
 <body>
+	<div id="graph_container"></div>
+
 	<script type="text/vnd.graphviz" id="dependencies">
 		${dependencies}
 	</script>
+
+	<script type="text/vnd.graphviz" id="dependencies_processed"></script>
+
 	<script>
-		document.body.innerHTML += Viz(document.getElementById("dependencies").innerHTML, "svg");
+		function redrawGraph(module) {
+			alert('module: ' + module);
+
+			var regex = new RegExp(module, "");
+
+			var graphAsDot = document.getElementById('dependencies').innerHTML;
+
+			var lines = graphAsDot.split('\\n');
+
+			var processedGraphAsDot = "";
+
+			for (var i = 0; i < lines.length; i++) {
+				var currentLine = lines[i];
+
+				if (currentLine.match(regex) && currentLine.match(/.*->.*/)) {
+					processedGraphAsDot += currentLine;
+				} else {
+					processedGraphAsDot += currentLine.replace(';', '[color=gray80];');
+				}
+			}
+
+			document.getElementById('dependencies_processed').innerHTML = processedGraphAsDot;
+
+			var graphAsSvg = Viz(document.getElementById("dependencies_processed").innerHTML, "svg");
+			document.getElementById('graph_container').innerHTML = graphAsSvg;
+		}
+	</script>
+
+	<script>
+		redrawGraph('.*');
 	</script>
 </body>
 </html>
