@@ -10,7 +10,19 @@ class DependencyToDotLanguageTranslator {
 		}
 
 		dependenciesGroupedByModule.findAll{ it.key ==~ regex }.each{ module, dependencies ->
-			graphEntries << "\"$module\" [fontcolor=blue, color=blue, , label=<<TABLE border=\"0\"><TR><TD title=\"$module\" href=\"javascript:redrawGraph('$module');\">$module</TD></TR></TABLE>>];"
+			graphEntries << "\"$module\" [fontcolor=blue, color=blue, label=<<TABLE border=\"0\"><TR><TD title=\"$module\" href=\"javascript:redrawGraph('$module');\">$module</TD></TR></TABLE>>];"
+		}
+
+
+		def allDependencies = [] as Set
+		dependenciesGroupedByModule.each { module, dependencies ->
+			allDependencies.addAll dependencies
+		}
+
+		allDependencies.removeAll dependenciesGroupedByModule.findAll{ it.key ==~ regex }.keySet()
+
+		allDependencies.each { dependency ->
+			graphEntries << "\"$dependency\" [label=<<TABLE border=\"0\"><TR><TD title=\"$dependency\" href=\"javascript:redrawGraph('$dependency');\">$dependency</TD></TR></TABLE>>];"
 		}
 
 		return graphEntries
