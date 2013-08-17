@@ -33,7 +33,7 @@
 				var currentLine = lines[i];
 
 				if (currentLine.match(/.*->.*/) && !currentLine.match(moduleNode)) {
-					processedGraphAsDot += currentLine.replace(';', '[color=gray80];');
+					processedGraphAsDot += currentLine.replace(';', '[color=gray80, penwidth=1];');
 				} else {
 					processedGraphAsDot += currentLine;
 				}
