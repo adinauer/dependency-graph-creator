@@ -12,6 +12,8 @@ buildscript {
     }
 }
 
+apply plugin: 'dependency-reporting'
+
 def dependencyReportDir = "$buildDir/report/dependencies"
 
 task createDependencyGraph(type: CreateDependencyGraph) {
