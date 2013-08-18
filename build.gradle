@@ -2,8 +2,15 @@ apply plugin: 'idea'
 
 import java.awt.Desktop
 
-// now run
-// groovy dependencies.groovy '.*acquisition.*' && dot tmp.gv -Tsvg > tmp.svg
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'at.dinauer.reporting:dependency-reporting-plugin:0.1-SNAPSHOT'
+    }
+}
 
 def dependencyReportDir = "$buildDir/report/dependencies"
 
