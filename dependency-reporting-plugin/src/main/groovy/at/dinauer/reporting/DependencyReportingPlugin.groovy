@@ -9,9 +9,7 @@ class DependencyReportingPlugin implements Plugin<Project> {
     void apply(Project project) {
         def dependencyReportDir = "${project.buildDir}/report/dependencies"
 
-        project.task('helloFromPlugin') << {
-            println 'hello from the plugin!'
-        }
+        project.extensions.create('dependencyReporting', DependencyReportingPluginExtension)
 
         project.task('openDependencyReport') << {
             Desktop.getDesktop().open(new File("$dependencyReportDir/dependencies.html"))
@@ -34,5 +32,43 @@ class DependencyReportingPlugin implements Plugin<Project> {
             from "src/main/lib"
             into dependencyReportDir
         }
+
+        project.task('createDependencyGraph', type: CreateDependencyGraph) { task ->
+            task.conventionMapping.dependencyGatherer = { project.dependencyReporting.dependencyGatherer }
+            translator = new DependencyToDotLanguageTranslator()
+            fileCreator = new GraphvizDotfileCreator()
+            task.conventionMapping.regex = { project.dependencyReporting.dependencyRegex }
+
+            graphDotFile = project.file("$dependencyReportDir/dependencies.gv")
+
+            outputs.upToDateWhen { false }
+        }
     }
 }
+
+class DependencyReportingPluginExtension {
+    def rootDirOfProjectToSearch
+    def dependencyRegex
+    def projectRegex
+    DependencyGatherer dependencyGatherer
+}
+
+class CreateDependencyGraph extends DefaultTask {
+    DependencyGatherer dependencyGatherer
+    DependencyToDotLanguageTranslator translator
+    GraphvizDotfileCreator fileCreator
+    String regex
+
+    @OutputFile
+    File graphDotFile
+
+    @TaskAction
+    void createDotfile() {
+        def dependenciesGroupedByModule = getDependencyGatherer().gatherDependencies()
+
+        def graphEntries = translator.translateDependenciesToDotLanguage(dependenciesGroupedByModule, getRegex())
+
+        fileCreator.createDirectedGraphFile(graphDotFile, graphEntries)
+    }
+}
+
