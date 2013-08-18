@@ -17,5 +17,16 @@ class DependencyReportingPlugin implements Plugin<Project> {
         }
 
         project.task('createDependencyReport', dependsOn: 'copyDependencyReportTemplate')
+
+        project.task('copyDependencyReportTemplate', dependsOn: ['createDependencyGraph', 'copyDependencyReportLibraries']) << {
+            project.copy {
+                from "src/main/resources"
+                into dependencyReportDir
+
+                String graphAsDot = project.createDependencyGraph.outputs.files.singleFile.text
+
+                expand(dependencies: graphAsDot)
+            }
+        }
     }
 }
