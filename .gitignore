@@ -2,3 +2,7 @@ tmp.gv
 .gradle
 build
 tmp.svg
+dependency-graph-creator.iml
+dependency-graph-creator.ipr
+dependency-graph-creator.iws
+.idea
