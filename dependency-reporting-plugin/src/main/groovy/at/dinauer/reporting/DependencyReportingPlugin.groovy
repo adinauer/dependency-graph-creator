@@ -1,6 +1,7 @@
 package at.dinauer.reporting
 
 import org.gradle.api.*
+import org.gradle.api.tasks.*
 
 import java.awt.Desktop
 
@@ -27,6 +28,11 @@ class DependencyReportingPlugin implements Plugin<Project> {
 
                 expand(dependencies: graphAsDot)
             }
+        }
+
+        project.task('copyDependencyReportLibraries', type: Copy) {
+            from "src/main/lib"
+            into dependencyReportDir
         }
     }
 }

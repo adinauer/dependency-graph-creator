@@ -25,11 +25,6 @@ task createDependencyGraph(type: CreateDependencyGraph) {
 	outputs.upToDateWhen { false }
 }
 
-task copyDependencyReportLibraries(type: Copy) {
-	from "src/main/lib"
-	into dependencyReportDir
-}
-
 class CreateDependencyGraph extends DefaultTask {
 	DependencyGatherer dependencyGatherer
 	DependencyToDotLanguageTranslator translator
