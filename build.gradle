@@ -1,7 +1,5 @@
 apply plugin: 'idea'
 
-import java.awt.Desktop
-
 buildscript {
     repositories {
         mavenLocal()
@@ -45,9 +43,6 @@ task copyDependencyReportTemplate(dependsOn: [createDependencyGraph, copyDepende
 
 task createDependencyReport(dependsOn: copyDependencyReportTemplate)
 
-task openDependencyReport(mustRunAfter: createDependencyReport) << {
-	Desktop.getDesktop().open(new File("$dependencyReportDir/dependencies.html"))
-}
 
 class CreateDependencyGraph extends DefaultTask {
 	DependencyGatherer dependencyGatherer
