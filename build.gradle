@@ -41,9 +41,6 @@ task copyDependencyReportTemplate(dependsOn: [createDependencyGraph, copyDepende
 	}
 }
 
-task createDependencyReport(dependsOn: copyDependencyReportTemplate)
-
-
 class CreateDependencyGraph extends DefaultTask {
 	DependencyGatherer dependencyGatherer
 	DependencyToDotLanguageTranslator translator

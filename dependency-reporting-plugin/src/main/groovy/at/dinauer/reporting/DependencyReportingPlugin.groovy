@@ -15,5 +15,7 @@ class DependencyReportingPlugin implements Plugin<Project> {
         project.task('openDependencyReport') << {
             Desktop.getDesktop().open(new File("$dependencyReportDir/dependencies.html"))
         }
+
+        project.task('createDependencyReport', dependsOn: 'copyDependencyReportTemplate')
     }
 }
