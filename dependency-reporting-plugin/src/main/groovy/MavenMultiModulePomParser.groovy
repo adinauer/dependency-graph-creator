@@ -9,7 +9,11 @@ class MavenMultiModulePomParser {
 		List<File> pomFiles = []
 
 		rootPomFile.parentFile.eachFile(FileType.DIRECTORIES) { module ->
-		    pomFiles << new File(module.absolutePath + '/pom.xml')
+      File pomFile = new File(module.absolutePath + '/pom.xml')
+      if (pomFile.exists()) {
+  		  pomFiles << pomFile
+  		  pomFiles.addAll(collectModulePomFiles(pomFile))
+      }
 		}
 
 		return pomFiles
